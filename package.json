@@ -1,0 +1,23 @@
+{
+  "name": "qa-api-tests",
+  "version": "1.0.0",
+  "description": "API test suite (Postman + Newman) for a booking/payment REST API — QA portfolio of Roman Neklyudov.",
+  "scripts": {
+    "test": "newman run postman/booking-api.postman_collection.json --reporters cli,junit --reporter-junit-export reports/junit.xml",
+    "test:ci": "newman run postman/booking-api.postman_collection.json --reporters cli,junit --reporter-junit-export reports/junit.xml"
+  },
+  "keywords": [
+    "qa",
+    "api-testing",
+    "postman",
+    "newman",
+    "rest-api",
+    "test-automation",
+    "ci-cd"
+  ],
+  "author": "Roman Neklyudov <r0meo1@ya.ru>",
+  "license": "MIT",
+  "devDependencies": {
+    "newman": "^6.1.3"
+  }
+}

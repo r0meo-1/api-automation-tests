@@ -1,0 +1,299 @@
+{
+	"info": {
+		"name": "Booking REST API — QA Suite",
+		"_postman_id": "b0a1c2d3-4e5f-6a7b-8c9d-0e1f2a3b4c5d",
+		"description": "Демонстрационный набор API-тестов в стиле тестирования платёжно-бронировочного REST API.\n\nВ качестве стабильного публичного бэкенда используется https://jsonplaceholder.typicode.com (JSONPlaceholder), который имитирует CRUD-ресурсы (заявки/брони как `posts`, клиентов как `users`).\n\nПокрытие: позитивные и негативные сценарии, проверка HTTP-статусов, JSON Schema, времени ответа, заголовков, идемпотентности и обработки ошибок.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{ "key": "baseUrl", "value": "https://jsonplaceholder.typicode.com" }
+	],
+	"item": [
+		{
+			"name": "Smoke",
+			"item": [
+				{
+					"name": "GET /posts — список заявок доступен",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Статус 200 OK', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Ответ — непустой массив', function () {",
+									"    const body = pm.response.json();",
+									"    pm.expect(body).to.be.an('array').that.is.not.empty;",
+									"});",
+									"",
+									"pm.test('Content-Type = application/json', function () {",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+									"});",
+									"",
+									"pm.test('Время ответа < 3000 мс', function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(3000);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": { "raw": "{{baseUrl}}/posts", "host": ["{{baseUrl}}"], "path": ["posts"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "Positive",
+			"item": [
+				{
+					"name": "GET /posts/1 — карточка заявки (schema)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const schema = {",
+									"    type: 'object',",
+									"    required: ['userId', 'id', 'title', 'body'],",
+									"    properties: {",
+									"        userId: { type: 'number' },",
+									"        id: { type: 'number' },",
+									"        title: { type: 'string' },",
+									"        body: { type: 'string' }",
+									"    }",
+									"};",
+									"",
+									"pm.test('Статус 200 OK', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Тело соответствует JSON Schema', function () {",
+									"    pm.response.to.have.jsonSchema(schema);",
+									"});",
+									"",
+									"pm.test('id запрошенного ресурса = 1', function () {",
+									"    pm.expect(pm.response.json().id).to.eql(1);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": { "raw": "{{baseUrl}}/posts/1", "host": ["{{baseUrl}}"], "path": ["posts", "1"] }
+					}
+				},
+				{
+					"name": "POST /posts — создание заявки (201)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Статус 201 Created', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Сервер вернул id новой заявки', function () {",
+									"    const body = pm.response.json();",
+									"    pm.expect(body).to.have.property('id');",
+									"});",
+									"",
+									"pm.test('Переданные поля сохранены', function () {",
+									"    const body = pm.response.json();",
+									"    pm.expect(body.title).to.eql('Бронь: Турция, июль');",
+									"    pm.expect(body.userId).to.eql(7);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [ { "key": "Content-Type", "value": "application/json" } ],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Бронь: Турция, июль\",\n  \"body\": \"2 взрослых, all inclusive\",\n  \"userId\": 7\n}"
+						},
+						"url": { "raw": "{{baseUrl}}/posts", "host": ["{{baseUrl}}"], "path": ["posts"] }
+					}
+				},
+				{
+					"name": "PUT /posts/1 — обновление заявки (200)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Статус 200 OK', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Изменения применены', function () {",
+									"    const body = pm.response.json();",
+									"    pm.expect(body.title).to.eql('Бронь обновлена: Египет');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [ { "key": "Content-Type", "value": "application/json" } ],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": 1,\n  \"title\": \"Бронь обновлена: Египет\",\n  \"body\": \"3 взрослых\",\n  \"userId\": 7\n}"
+						},
+						"url": { "raw": "{{baseUrl}}/posts/1", "host": ["{{baseUrl}}"], "path": ["posts", "1"] }
+					}
+				},
+				{
+					"name": "DELETE /posts/1 — отмена заявки (200)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Статус 200 OK', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": { "raw": "{{baseUrl}}/posts/1", "host": ["{{baseUrl}}"], "path": ["posts", "1"] }
+					}
+				},
+				{
+					"name": "GET /posts?userId=1 — фильтрация по клиенту",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Статус 200 OK', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Все элементы принадлежат userId=1', function () {",
+									"    const body = pm.response.json();",
+									"    pm.expect(body).to.be.an('array').that.is.not.empty;",
+									"    body.forEach(function (item) {",
+									"        pm.expect(item.userId).to.eql(1);",
+									"    });",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/posts?userId=1",
+							"host": ["{{baseUrl}}"],
+							"path": ["posts"],
+							"query": [ { "key": "userId", "value": "1" } ]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Negative",
+			"item": [
+				{
+					"name": "GET /posts/999999 — несуществующая заявка (404)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Статус 404 Not Found', function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test('Тело ответа пустое', function () {",
+									"    pm.expect(pm.response.json()).to.be.an('object').that.is.empty;",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": { "raw": "{{baseUrl}}/posts/999999", "host": ["{{baseUrl}}"], "path": ["posts", "999999"] }
+					}
+				},
+				{
+					"name": "GET /unknown-route — неизвестный ресурс (404)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Статус 404 Not Found', function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": { "raw": "{{baseUrl}}/unknown-route-qa", "host": ["{{baseUrl}}"], "path": ["unknown-route-qa"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "Idempotency",
+			"item": [
+				{
+					"name": "GET /posts/2 — повторный запрос стабилен",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Статус 200 OK', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Ответ детерминирован (id=2)', function () {",
+									"    pm.expect(pm.response.json().id).to.eql(2);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": { "raw": "{{baseUrl}}/posts/2", "host": ["{{baseUrl}}"], "path": ["posts", "2"] }
+					}
+				}
+			]
+		}
+	]
+}
