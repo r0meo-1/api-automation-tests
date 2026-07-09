@@ -1,4 +1,4 @@
-# qa-api-tests — Postman + Newman API Test Suite
+# api-automation-tests — Postman + Newman API Test Suite
 
 [![API Tests](https://github.com/r0meo-1/api-automation-tests/actions/workflows/api-tests.yml/badge.svg)](https://github.com/r0meo-1/api-automation-tests/actions/workflows/api-tests.yml)
 ![Postman](https://img.shields.io/badge/Postman-Collection-FF6C37?logo=postman&logoColor=white)
