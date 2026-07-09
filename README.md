@@ -1,4 +1,4 @@
-# api-automation-tests — Postman + Newman API Test Suite
+# api-automation-tests — Postman, который не спит
 
 [![API Tests](https://github.com/r0meo-1/api-automation-tests/actions/workflows/api-tests.yml/badge.svg)](https://github.com/r0meo-1/api-automation-tests/actions/workflows/api-tests.yml)
 ![Postman](https://img.shields.io/badge/Postman-Collection-FF6C37?logo=postman&logoColor=white)
@@ -6,58 +6,78 @@
 ![Node.js](https://img.shields.io/badge/Node.js-20-339933?logo=node.js&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
-> Автоматизированный набор **API-тестов** для REST API системы бронирования/оплаты.
-> Postman-коллекция, прогон через **Newman**, непрерывный прогон в **GitHub Actions (CI/CD)**.
->
-> Часть QA-портфолио: **[r0meo1.ru](https://r0meo1.ru)** · автор — Роман Неклюдов (Middle QA Engineer).
+> «У меня в Postman всё зелёное» — фраза, после которой CI обычно смеётся.  
+> Здесь зелёное **и** в Postman, **и** в GitHub Actions. Дважды зелёное. Почти как матрица, только про JSON.
 
-## Что внутри
+Автотесты **REST API** для сценариев бронирования/оплаты:  
+коллекция Postman → прогон **Newman** → отчёт в CI. Smoke, позитив, негатив, идемпотентность, JSON Schema.
 
-- **`postman/booking-api.postman_collection.json`** — 9 запросов, 20 проверок: smoke, позитивные и негативные сценарии, идемпотентность.
-- **`postman/booking-api.postman_environment.json`** — окружение с `baseUrl`.
-- **`docs/api-test-cases.md`** — тест-кейсы в табличном виде (ID, тип, шаги, ожидаемый результат).
-- **`.github/workflows/api-tests.yml`** — CI: устанавливает Node, ставит зависимости, гоняет Newman, публикует JUnit-отчёт.
+Часть QA-портфолио: **[r0meo1.ru](https://r0meo1.ru)** · Роман Неклюдов
+
+---
+
+## Что внутри (без воды)
+
+| Путь | Зачем |
+|------|--------|
+| `postman/booking-api.postman_collection.json` | 9 запросов, ~20 assertions — основной удар |
+| `postman/booking-api.postman_environment.json` | `baseUrl` и прочие мелочи судьбы |
+| `docs/api-test-cases.md` | Те же кейсы таблицей — для людей, которые не открывают Postman «на ночь» |
+| `.github/workflows/api-tests.yml` | CI: Node → deps → Newman → JUnit |
+
+---
 
 ## Покрытие
 
-| Группа | Проверки |
-|--------|----------|
-| Smoke | доступность списка, `Content-Type`, время ответа (SLA) |
-| Positive | `GET` карточки + JSON Schema, `POST` 201, `PUT` 200, `DELETE` 200, фильтрация по клиенту |
-| Negative | 404 на несуществующий ресурс и неизвестный маршрут |
-| Idempotency | детерминированность повторного чтения |
+| Группа | Что проверяем |
+|--------|----------------|
+| **Smoke** | Жив ли API, `Content-Type`, SLA по времени (да, 30 секунд — это уже не «чуть подтормаживает») |
+| **Positive** | GET + schema, POST 201, PUT 200, DELETE 200, фильтры |
+| **Negative** | 404 на призраков и кривые маршруты |
+| **Idempotency** | Повторное чтение не должно устраивать лотерею |
 
-Всего: **20 assertions**, все зелёные в CI.
+Итого: **20 assertions**. Все зелёные в CI. Пока. (Спойлер: API меняется. Тесты — ваша страховка.)
 
-## Запуск локально
+---
+
+## Запуск
 
 ```bash
 npm ci
 npm test
 ```
 
-Или напрямую через Newman:
+Или по-старинке:
 
 ```bash
 npx newman run postman/booking-api.postman_collection.json \
   -e postman/booking-api.postman_environment.json
 ```
 
-## Бэкенд
+---
 
-Для воспроизводимого прогона в CI используется публичный стабильный API
-[JSONPlaceholder](https://jsonplaceholder.typicode.com) (заявки → `posts`, клиенты → `users`).
-Структура проверок повторяет реальные кейсы тестирования платёжно-бронировочных интеграций.
+## Бэкенд для CI
+
+Чтобы не тащить в CI «настоящий» продовый API (и не устроить DDoS по привычке),  
+используется стабильный [JSONPlaceholder](https://jsonplaceholder.typicode.com)  
+(заявки → `posts`, клиенты → `users`).  
+Структура проверок — как у платёжно-бронировочных интеграций в реальной жизни, только без слёз бухгалтерии.
+
+---
 
 ## Стек
 
-`REST API` · `Postman` · `Newman` · `JSON Schema` · `Node.js` · `GitHub Actions` · `CI/CD`
+`REST` · `Postman` · `Newman` · `JSON Schema` · `Node.js` · `GitHub Actions`
+
+## Связанные репы
+
+- [data-quality-checks](https://github.com/r0meo-1/data-quality-checks) — когда API сказал «ок», а SQL сказал «лжец»
+- [test-design-docs](https://github.com/r0meo-1/test-design-docs) — откуда вообще берутся эти кейсы
 
 ## Контакты
 
-- Сайт / портфолио: **[r0meo1.ru](https://r0meo1.ru)**
-- Telegram: [@r0meo1](https://t.me/r0meo1) · Email: r0meo1@ya.ru · GitHub: [r0meo-1](https://github.com/r0meo-1)
+- **[r0meo1.ru](https://r0meo1.ru)** · [@r0meo1](https://t.me/r0meo1) · r0meo1@ya.ru
 
 ## Лицензия
 
-[MIT](LICENSE)
+[MIT](LICENSE) — гоняйте тесты, не гоняйте прод без staging.
