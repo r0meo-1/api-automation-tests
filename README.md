@@ -1,6 +1,6 @@
 # qa-api-tests — Postman + Newman API Test Suite
 
-[![API Tests](https://github.com/r0meo-1/qa-api-tests/actions/workflows/api-tests.yml/badge.svg)](https://github.com/r0meo-1/qa-api-tests/actions/workflows/api-tests.yml)
+[![API Tests](https://github.com/r0meo-1/api-automation-tests/actions/workflows/api-tests.yml/badge.svg)](https://github.com/r0meo-1/api-automation-tests/actions/workflows/api-tests.yml)
 ![Postman](https://img.shields.io/badge/Postman-Collection-FF6C37?logo=postman&logoColor=white)
 ![Newman](https://img.shields.io/badge/Newman-CLI-FF6C37)
 ![Node.js](https://img.shields.io/badge/Node.js-20-339933?logo=node.js&logoColor=white)
