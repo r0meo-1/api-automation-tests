@@ -12,7 +12,15 @@
 Автотесты **REST API** для сценариев бронирования/оплаты:  
 коллекция Postman → прогон **Newman** → отчёт в CI. Smoke, позитив, негатив, идемпотентность, JSON Schema.
 
-Часть QA-портфолио: **[r0meo1.ru](https://r0meo1.ru)** · Роман Неклюдов
+Часть портфолио: **[r0meo1.ru](https://r0meo1.ru)** · Роман Неклюдов
+
+## За 20 секунд
+
+| | |
+|--|--|
+| **Что** | Postman-коллекция REST API + Newman в CI |
+| **Зачем** | «У меня зелёное» = зелёное и в Actions, не только на ноутбуке |
+| **Проверить** | [CI badge](https://github.com/r0meo-1/api-automation-tests/actions) · `npx newman run postman/...` |
 
 ---
 
