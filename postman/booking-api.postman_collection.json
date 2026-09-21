@@ -280,8 +280,19 @@
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test('Ответ детерминирован (id=2)', function () {",
-									"    pm.expect(pm.response.json().id).to.eql(2);",
+									"const first = pm.response.json();",
+									"pm.test('id запрошенного ресурса = 2', function () {",
+									"    pm.expect(first.id).to.eql(2);",
+									"});",
+									"pm.sendRequest({url: pm.variables.replaceIn(pm.request.url.toString()), method: 'GET'}, function (error, response) {",
+									"    pm.test('Повторный запрос успешен', function () {",
+									"        pm.expect(error).to.equal(null);",
+									"        pm.expect(response.code).to.equal(200);",
+									"    });",
+									"    if (error) return;",
+									"    pm.test('Полное тело повторного ответа совпадает', function () {",
+									"        pm.expect(response.json()).to.deep.equal(first);",
+									"    });",
 									"});"
 								]
 							}

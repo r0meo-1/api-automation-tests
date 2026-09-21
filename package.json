@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "API test suite (Postman + Newman) for a booking/payment REST API — QA portfolio of Roman Neklyudov.",
   "scripts": {
+    "test:contracts": "node --test tests/repeated-read.test.cjs",
     "test": "newman run postman/booking-api.postman_collection.json --reporters cli,junit --reporter-junit-export reports/junit.xml",
     "test:ci": "newman run postman/booking-api.postman_collection.json --reporters cli,junit --reporter-junit-export reports/junit.xml"
   },
