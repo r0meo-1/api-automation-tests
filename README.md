@@ -85,6 +85,9 @@ JSONPlaceholder имитирует запись: ответы POST/PUT не до
 
 ## Стек
 
+Состояние зависимостей Newman и оставшиеся предупреждения аудита описаны в
+[dependency-status.md](docs/dependency-status.md). Проверки API не заменяют аудит зависимостей.
+
 `REST` · `Postman` · `Newman` · `JSON Schema` · `Node.js` · `GitHub Actions`
 
 ## Связанные репы

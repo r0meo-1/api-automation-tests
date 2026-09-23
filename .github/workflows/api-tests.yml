@@ -26,6 +26,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Reject critical dependency advisories
+        run: npm audit --audit-level=critical
+
       - name: Run API tests
         run: npm run test:ci
 
