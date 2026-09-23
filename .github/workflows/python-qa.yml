@@ -1,0 +1,46 @@
+name: Python QA Portfolio
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  pytest-api:
+    name: pytest API checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install .
+      - run: python -m pytest -m api --junitxml=reports/pytest-api.xml
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-api-report
+          path: reports/pytest-api.xml
+          if-no-files-found: error
+
+  playwright-ui:
+    name: Playwright UI checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install .
+      - run: python -m playwright install --with-deps chromium
+      - run: python -m pytest -m ui --junitxml=reports/pytest-ui.xml
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-ui-report
+          path: reports/pytest-ui.xml
+          if-no-files-found: error
