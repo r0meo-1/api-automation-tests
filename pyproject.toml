@@ -1,0 +1,19 @@
+[project]
+name = "qa-automation-portfolio"
+version = "1.0.0"
+description = "Deterministic pytest and Playwright QA portfolio suite"
+requires-python = ">=3.11"
+dependencies = ["playwright>=1.55,<2", "pytest>=8.4,<10", "requests>=2.32,<3"]
+
+[tool.setuptools]
+packages = ["qa_portfolio"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-markers"
+testpaths = ["python_tests"]
+markers = [
+    "api: service-level API checks",
+    "ui: browser-based user journey checks",
+    "smoke: critical-path checks",
+    "regression: broader validation and negative checks",
+]

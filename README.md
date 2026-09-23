@@ -9,8 +9,9 @@
 > «У меня в Postman всё зелёное» — фраза, после которой CI обычно смеётся.  
 > Здесь зелёное **и** в Postman, **и** в GitHub Actions. Дважды зелёное. Почти как матрица, только про JSON.
 
-Автотесты **REST API** для сценариев бронирования/оплаты:  
-коллекция Postman → прогон **Newman** → отчёт в CI. Smoke, позитив, негатив, идемпотентность, JSON Schema.
+Автотесты **REST API и браузерного UI** для сценариев бронирования:
+Postman/Newman + Python/pytest + Playwright → раздельные отчёты в CI. Smoke,
+позитив, негатив, границы 1–28 ночей, контракт API и пользовательский сценарий.
 
 Часть портфолио: **[r0meo1.ru](https://r0meo1.ru)** · Роман Неклюдов
 
@@ -32,6 +33,10 @@
 | `postman/booking-api.postman_environment.json` | `baseUrl` и прочие мелочи судьбы |
 | `docs/api-test-cases.md` | Те же кейсы таблицей — для людей, которые не открывают Postman «на ночь» |
 | `.github/workflows/api-tests.yml` | CI: Node → deps → Newman → JUnit |
+| `qa_portfolio/server.py` | Детерминированный локальный API и HTML-форма без зависимости от production |
+| `python_tests/api/` | pytest API: контракт, границы, негативные payload и content type |
+| `python_tests/ui/` | Playwright: успешное бронирование и серверная ошибка |
+| `.github/workflows/python-qa.yml` | Раздельные API/UI jobs, Chromium и JUnit artifacts |
 
 ---
 
@@ -55,6 +60,24 @@ GET-запроса и сравнивает полное JSON-тело, а так
 npm ci
 npm test
 npm run test:contracts
+```
+
+Python/pytest + Playwright:
+
+```bash
+python -m venv .venv
+# Windows: .venv\Scripts\activate
+pip install .
+python -m playwright install chromium
+python -m pytest
+```
+
+Быстрые срезы:
+
+```bash
+python -m pytest -m api
+python -m pytest -m ui
+python -m pytest -m smoke
 ```
 
 Или по-старинке:
@@ -88,7 +111,7 @@ JSONPlaceholder имитирует запись: ответы POST/PUT не до
 Состояние зависимостей Newman и оставшиеся предупреждения аудита описаны в
 [dependency-status.md](docs/dependency-status.md). Проверки API не заменяют аудит зависимостей.
 
-`REST` · `Postman` · `Newman` · `JSON Schema` · `Node.js` · `GitHub Actions`
+`REST` · `Postman` · `Newman` · `pytest` · `Playwright` · `Python` · `JSON Schema` · `GitHub Actions`
 
 ## Связанные репы
 
