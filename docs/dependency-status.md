@@ -1,25 +1,25 @@
 # Newman dependency status
 
-Registry audit checked on 2026-09-21. These are npm's counts of vulnerable
+Registry audit checked on 2026-10-31. These are npm's counts of vulnerable
 packages, including parent packages affected through dependencies, not counts
 of independent vulnerabilities or proof of exploitability in this collection.
 
 | State | Critical | High | Moderate | Total |
 |---|---:|---:|---:|---:|
-| Original lockfile | 1 | 12 | 7 | 20 |
+| Before October update | 3 | 4 | 6 | 13 |
 | Patched dependency overrides | 0 | 5 | 4 | 9 |
 
-Newman 6.2.2 was already the registry's latest version, but several dependencies
-were pinned below patched versions. The overrides select same-major releases:
+Updated Newman to 6.2.3 and refreshed dependency overrides that were below
+patched versions. The overrides select same-major releases:
 
 | Dependency | Selected version |
 |---|---|
-| handlebars | 4.7.9 |
+| handlebars | 4.7.10 |
 | lodash | 4.18.1 |
-| node-forge | 1.4.0 |
-| qs | 6.16.0 |
+| node-forge | 1.4.2 |
+| qs | 6.17.1 |
 | underscore | 1.13.8 |
-| ip-address | 10.7.2 |
+| ip-address | 10.7.5 |
 | flatted | 3.4.4 |
 | jose | 4.15.9 |
 
