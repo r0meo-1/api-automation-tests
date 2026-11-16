@@ -1,4 +1,4 @@
-# api-automation-tests — Postman, который не спит
+# api-automation-tests — учебные проверки REST API и UI
 
 [![API Tests](https://github.com/r0meo-1/api-automation-tests/actions/workflows/api-tests.yml/badge.svg)](https://github.com/r0meo-1/api-automation-tests/actions/workflows/api-tests.yml)
 ![Postman](https://img.shields.io/badge/Postman-Collection-FF6C37?logo=postman&logoColor=white)
@@ -6,10 +6,11 @@
 ![Node.js](https://img.shields.io/badge/Node.js-20-339933?logo=node.js&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
-> «У меня в Postman всё зелёное» — фраза, после которой CI обычно смеётся.  
-> Здесь зелёное **и** в Postman, **и** в GitHub Actions. Дважды зелёное. Почти как матрица, только про JSON.
+Учебное QA-портфолио. Код, автотесты и часть документации подготовлены
+с существенной помощью AI. Результат конкретного запуска можно проверить
+в GitHub Actions; наличие CI не означает, что все проверки всегда проходят.
 
-Автотесты **REST API и браузерного UI** для сценариев бронирования:
+Автотесты **REST API и браузерного UI** для демонстрационных сценариев бронирования:
 Postman/Newman + Python/pytest + Playwright → раздельные отчёты в CI. Smoke,
 позитив, негатив, границы 1–28 ночей, контракт API и пользовательский сценарий.
 
@@ -20,7 +21,7 @@ Postman/Newman + Python/pytest + Playwright → раздельные отчёт�
 | | |
 |--|--|
 | **Что** | Postman-коллекция REST API + Newman в CI |
-| **Зачем** | «У меня зелёное» = зелёное и в Actions, не только на ноутбуке |
+| **Зачем** | Воспроизводимые проверки и отчёты конкретных запусков |
 | **Проверить** | [CI badge](https://github.com/r0meo-1/api-automation-tests/actions) · `npx newman run postman/...` |
 
 ---
@@ -29,7 +30,7 @@ Postman/Newman + Python/pytest + Playwright → раздельные отчёт�
 
 | Путь | Зачем |
 |------|--------|
-| `postman/booking-api.postman_collection.json` | 9 сценариев, 10 HTTP-запросов, 22 assertions |
+| `postman/booking-api.postman_collection.json` | CRUD, схема ответов, негативные сценарии и повторное чтение |
 | `postman/booking-api.postman_environment.json` | `baseUrl` и прочие мелочи судьбы |
 | `docs/api-test-cases.md` | Те же кейсы таблицей — для людей, которые не открывают Postman «на ночь» |
 | `.github/workflows/api-tests.yml` | CI: Node → deps → Newman → JUnit |
@@ -44,12 +45,12 @@ Postman/Newman + Python/pytest + Playwright → раздельные отчёт�
 
 | Группа | Что проверяем |
 |--------|----------------|
-| **Smoke** | Жив ли API, `Content-Type`, SLA по времени (да, 30 секунд — это уже не «чуть подтормаживает») |
+| **Smoke** | Доступность API, `Content-Type` и заданный в коллекции порог времени ответа |
 | **Positive** | GET + schema, POST 201, PUT 200, DELETE 200, фильтры |
 | **Negative** | 404 на призраков и кривые маршруты |
-| **Idempotency** | Повторное чтение не должно устраивать лотерею |
+| **Repeated read** (папка `Idempotency`) | Два GET статического ресурса и сравнение ответов |
 
-Итого: **22 assertions**. Сценарий повторного чтения отправляет два отдельных
+Сценарий повторного чтения отправляет два отдельных
 GET-запроса и сравнивает полное JSON-тело, а также проверяет статус второго ответа.
 
 ---
@@ -94,7 +95,7 @@ npx newman run postman/booking-api.postman_collection.json \
 Чтобы не тащить в CI «настоящий» продовый API (и не устроить DDoS по привычке),  
 используется стабильный [JSONPlaceholder](https://jsonplaceholder.typicode.com)  
 (заявки → `posts`, клиенты → `users`).  
-Структура проверок — как у платёжно-бронировочных интеграций в реальной жизни, только без слёз бухгалтерии.
+Это демонстрационная модель, а не проверка рабочей CRM, платежей или реальных бронирований.
 
 JSONPlaceholder имитирует запись: ответы POST/PUT не доказывают сохранение данных
 или работу настоящих платежей. Повторное чтение проверяет стабильность статического
@@ -125,3 +126,4 @@ JSONPlaceholder имитирует запись: ответы POST/PUT не до
 ## Лицензия
 
 [MIT](LICENSE) — гоняйте тесты, не гоняйте прод без staging.
+
